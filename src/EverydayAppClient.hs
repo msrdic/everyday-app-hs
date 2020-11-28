@@ -76,5 +76,16 @@ mark d h = do
     let status = resp ^. responseStatus . statusCode
     return $ if status == 200 then OK else NotOK
 
-skip   = undefined
-unmark = undefined
+skip d h = do
+    opts <- _getOpts
+    let payload = HabitPayload d h
+    resp <- postWith opts "https://api.everyday.app/skip" (toJSON payload)
+    let status = resp ^. responseStatus . statusCode
+    return $ if status == 200 then OK else NotOK
+
+unmark d h = do
+    opts <- _getOpts
+    let payload = HabitPayload d h
+    resp <- postWith opts "https://api.everyday.app/unmark" (toJSON payload)
+    let status = resp ^. responseStatus . statusCode
+    return $ if status == 200 then OK else NotOK

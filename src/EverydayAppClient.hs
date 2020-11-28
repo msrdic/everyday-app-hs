@@ -51,9 +51,7 @@ _habitIds = do
                       else fromJust token
     let opts = defaults & header "Authorization" .~ [encodeUtf8 authToken]
     resp <- getWith opts "https://api.everyday.app/habits/"
-    return$  nub $ sort $ map _id $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
-    
-
+    return $ nub $ sort $ map _id $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
 
 mark d h = do
     token <- _getAuthToken ("conf" </> "auth" <.> "config")

@@ -30,6 +30,8 @@ library
                      , lens
                      , aeson
                      , lens-aeson
+                     , pretty-simple
+                     , vector
   
 
 source-repository head

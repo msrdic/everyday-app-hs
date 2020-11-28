@@ -1,16 +1,22 @@
 module EverydayAppClient ( mark, skip, unmark ) where
 
-import Data.Text ( Text )
-import System.FilePath ((<.>), (</>))
-import Control.Lens ((.~), (&), (^.))
-
 import qualified Data.Configurator as DC
-import Network.Wreq (responseBody, getWith, statusCode, postWith, defaults, header, responseStatus, Options)
-import Data.Text.Encoding (encodeUtf8)
+import System.FilePath ((<.>), (</>))
+
 import Data.Maybe (fromJust)
-import Data.Aeson (Result (..), fromJSON, (.:), withObject, parseJSON, FromJSON, object, ToJSON, toJSON, (.=))
-import Data.Aeson.Lens ( AsValue(_Array) )
 import Data.List (nubBy)
+import Data.Text ( Text )
+
+import Control.Lens ((.~), (&), (^.))
+import Data.Aeson.Lens ( AsValue(_Array) )
+
+import Network.Wreq ( Options
+                    , getWith, postWith, defaults, header
+                    , statusCode, responseBody, responseStatus)
+import Data.Text.Encoding (encodeUtf8)
+import Data.Aeson ( Result (..), FromJSON, ToJSON
+                  , fromJSON, toJSON, parseJSON
+                  , withObject, object, (.=), (.:))
 
 import qualified Data.Vector as V
 

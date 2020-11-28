@@ -1,4 +1,4 @@
-module EverydayAppClient ( YYMMDD, HabitId, Status
+module EverydayAppClient ( YYMMDD, HabitId, Status (..)
                          , mark, skip, unmark ) where
 
 import qualified Data.Configurator as DC

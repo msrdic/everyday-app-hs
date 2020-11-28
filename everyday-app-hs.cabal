@@ -30,9 +30,7 @@ library
                      , lens
                      , aeson
                      , lens-aeson
-                     , pretty-simple
                      , vector
-                     , data-ordlist
   
 
 source-repository head

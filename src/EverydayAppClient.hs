@@ -10,8 +10,7 @@ import Data.Text.Encoding (encodeUtf8)
 import Data.Maybe (fromJust)
 import Data.Aeson (Result (..), fromJSON, (.:), withObject, parseJSON, FromJSON, object, ToJSON, toJSON, (.=))
 import Data.Aeson.Lens ( AsValue(_Array) )
-import Data.List (nub)
-import Data.List.Ordered (nubBy)
+import Data.List (nubBy)
 
 import qualified Data.Vector as V
 
@@ -31,7 +30,7 @@ data Status = OK | NotOK deriving (Show)
 
 instance ToJSON HabitPayload where
     toJSON (HabitPayload d hid) = object ["date" .= d, "habit_id" .= hid]
-    
+
 mark   :: YYMMDD -> HabitId -> IO Status
 skip   :: YYMMDD -> HabitId -> IO Status
 unmark :: YYMMDD -> HabitId -> IO Status
@@ -61,13 +60,7 @@ _habits = do
     return $ nubBy _comparingIds $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
 
 _comparingIds :: Habit -> Habit -> Bool
-_comparingIds (Habit id1 _) (Habit id2 _) = id1 /= id2
-
-_habitIds :: IO [Int]
-_habitIds = do
-    opts <- _getOpts
-    resp <- getWith opts "https://api.everyday.app/habits/"
-    return $ nub $ map _id $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
+_comparingIds (Habit id1 _) (Habit id2 _) = id1 == id2
 
 mark d h = do
     opts <- _getOpts

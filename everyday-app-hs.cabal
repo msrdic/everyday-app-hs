@@ -15,12 +15,22 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
+  default-extensions:  OverloadedStrings
+  default-language:    Haskell2010
   exposed-modules:     EverydayAppClient
+  ghc-options:         -Wall
+                       -Werror
+                       -Wcompat
+                       -Wmissing-export-lists
   build-depends:       base >= 4.7 && < 5
                      , wreq
                      , text
                      , configurator
-  default-language:    Haskell2010
+                     , filepath 
+                     , lens
+                     , aeson
+                     , lens-aeson
+  
 
 source-repository head
   type:     git

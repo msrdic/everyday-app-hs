@@ -10,20 +10,22 @@ import Data.Text.Encoding (encodeUtf8)
 import Data.Maybe (fromJust)
 import Data.Aeson (Result (..), fromJSON, (.:), withObject, parseJSON, FromJSON, object, ToJSON, toJSON, (.=))
 import Data.Aeson.Lens ( AsValue(_Array) )
-import Data.List (nub, sort)
+import Data.List (nub)
+import Data.List.Ordered (nubBy)
 
 import qualified Data.Vector as V
 
 type YYMMDD = Text
 type HabitId = Int
 
-newtype Habit = Habit { _id :: Int } deriving (Show)
-instance FromJSON Habit where
-    parseJSON = withObject "selector" $ \o -> Habit <$> o .: "id"
+data Habit =
+    Habit { _id :: Int, _name :: Text } deriving (Show)
 
-data HabitPayload = HabitPayload { _date :: Text
-                                 , _habitId :: Int
-                                 }
+instance FromJSON Habit where
+    parseJSON = withObject "selector" $ \o -> Habit <$> o .: "id" <*> o .: "name"
+
+data HabitPayload =
+    HabitPayload { _date :: Text, _habitId :: Int }
 
 data Status = OK | NotOK deriving (Show)
 
@@ -52,11 +54,20 @@ _getOpts = do
     let opts = defaults & header "Authorization" .~ [encodeUtf8 authToken]
     return opts
 
+_habits :: IO [Habit]
+_habits = do
+    opts <- _getOpts
+    resp <- getWith opts "https://api.everyday.app/habits/"
+    return $ nubBy _comparingIds $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
+
+_comparingIds :: Habit -> Habit -> Bool
+_comparingIds (Habit id1 _) (Habit id2 _) = id1 /= id2
+
 _habitIds :: IO [Int]
 _habitIds = do
     opts <- _getOpts
     resp <- getWith opts "https://api.everyday.app/habits/"
-    return $ nub $ sort $ map _id $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
+    return $ nub $ map _id $ V.toList $ V.map _fromResult $ V.map fromJSON $ resp ^. responseBody . _Array
 
 mark d h = do
     opts <- _getOpts

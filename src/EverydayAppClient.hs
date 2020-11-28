@@ -1,4 +1,5 @@
-module EverydayAppClient ( mark, skip, unmark ) where
+module EverydayAppClient ( YYMMDD, HabitId, Status
+                         , mark, skip, unmark ) where
 
 import qualified Data.Configurator as DC
 import System.FilePath ((<.>), (</>))
@@ -22,6 +23,7 @@ import qualified Data.Vector as V
 
 type YYMMDD = Text
 type HabitId = Int
+data Status = OK | NotOK deriving (Show)
 
 data Habit =
     Habit { _id :: Int, _name :: Text } deriving (Show)
@@ -31,8 +33,6 @@ instance FromJSON Habit where
 
 data HabitPayload =
     HabitPayload { _date :: Text, _habitId :: Int }
-
-data Status = OK | NotOK deriving (Show)
 
 instance ToJSON HabitPayload where
     toJSON (HabitPayload d hid) = object ["date" .= d, "habit_id" .= hid]
